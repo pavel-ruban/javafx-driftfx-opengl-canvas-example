@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="org.eclipse.fx.drift_1.0.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/org.eclipse.fx.drift_1.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
