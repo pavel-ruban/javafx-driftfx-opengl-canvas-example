@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+//import atlantafx.base.theme.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.image.Image;
 import javafx.driftfx.opengl.canvas.example.rendering.RenderLoop;
 import javafx.util.Duration;
 import org.eclipse.fx.drift.*;
@@ -29,7 +31,7 @@ public class JFXWindow extends Application {
 	private static RenderLoop renderLoop;
 	private static boolean isLoaded = false;
 	private Stage window;
-	private Controller controller;
+	private javafx.driftfx.opengl.canvas.example.fx.Controller controller;
 
 	private final HashSet<KeyCode> activeKeys = new HashSet();
 
@@ -46,10 +48,12 @@ public class JFXWindow extends Application {
 		System.out.println("Initializing GUI.");
 		window = primary;
 		window.setTitle("app javafx / driftfx opengl canvas example");
-
+		window.getIcons().add(new Image(getClass().getResourceAsStream("icons/favicon.png")));
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
+		Application.setUserAgentStylesheet(getClass().getResource("nord-light.css").toString());
+//		Application.setUserAgentStylesheet(new CupertinoDark().getUserAgentStylesheet());
 		Parent root = loader.load();
-		window.setScene(new Scene(root, 1920, 1080));
+		window.setScene(new Scene(root));
 		controller = loader.getController();
 		controller.postInit();
 		isLoaded = true;
@@ -59,10 +63,10 @@ public class JFXWindow extends Application {
 //			new Timeline(new KeyFrame(
 //				Duration.millis(5000),
 //				actionEvent -> {
-					// You should run this call in main javafx QuantumRenderer thread or the texture of
-					// swapchain acquire later call will be corrupted, at least in linux with main memory target.
-					renderLoop.hook = GLRenderer.getRenderer(getRenderPane());
-					System.out.println("Hook init");
+			// You should run this call in main javafx QuantumRenderer thread or the texture of
+			// swapchain acquire later call will be corrupted, at least in linux with main memory target.
+			renderLoop.hook = GLRenderer.getRenderer(getRenderPane());
+			System.out.println("Hook init");
 //				})
 //			).play();
 
@@ -76,8 +80,10 @@ public class JFXWindow extends Application {
 		Task<Void> sleeper = new Task<Void>() {
 			@Override
 			protected Void call() throws Exception {
-				try { Thread.sleep(millis); }
-				catch (InterruptedException e) { }
+				try {
+					Thread.sleep(millis);
+				} catch (InterruptedException e) {
+				}
 				return null;
 			}
 		};
@@ -106,35 +112,6 @@ public class JFXWindow extends Application {
 
 	public static DriftFXSurface getRenderPane() {
 		return gui != null && gui.controller != null ? gui.controller.renderingSurface : null;
-	}
-
-	public static ArrayList<Node> getRecursiveChildren(Parent root) {
-		ArrayList<Node> nodes = new ArrayList<Node>();
-		addAllChildren(root, nodes);
-		return nodes;
-	}
-
-	private static void addAllChildren(Parent p, ArrayList<Node> nodes) {
-		for (Node n : getDirectChildren(p)) {
-			nodes.add(n);
-			if (n instanceof Parent)
-				addAllChildren((Parent)n, nodes);
-		}
-	}
-
-	private static Collection<Node> getDirectChildren(Parent p) {
-		Collection<Node> ret = new ArrayList();
-		ret.addAll(p.getChildrenUnmodifiable());
-		if (p instanceof SplitPane) {
-			ret.addAll(((SplitPane)p).getItems());
-		}
-		if (p instanceof Accordion) {
-			ret.addAll(((Accordion)p).getPanes());
-		}
-		if (p instanceof TitledPane) {
-			ret.add(((TitledPane)p).getContent());
-		}
-		return ret;
 	}
 
 }

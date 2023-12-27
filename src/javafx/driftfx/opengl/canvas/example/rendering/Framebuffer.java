@@ -204,7 +204,6 @@ public class Framebuffer {
 	public void clear() {
 		this.bind(true);
 		GL11.glClearColor(clearRed, clearGreen, clearBlue, 1);
-		GL11.glClearColor(1f, 0f, 0f, 1f);
 		GL11.glClearDepth(1);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		this.unbind();
@@ -228,6 +227,15 @@ public class Framebuffer {
 		GL32.glBindFramebuffer(GL32.GL_DRAW_FRAMEBUFFER, otherBuffer);
 		GL32.glBindFramebuffer(GL32.GL_READ_FRAMEBUFFER, bufferID);
 		GL32.glBlitFramebuffer(0, 0, width, height, dx, dy, dx+width, dy+height, GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT, GL11.GL_NEAREST);
+		GL32.glBindFramebuffer(GL32.GL_FRAMEBUFFER, 0);
+	}
+
+	public void sendToColorBit(int otherBuffer) {
+		int dx = 0;
+		int dy = 0;
+		GL32.glBindFramebuffer(GL32.GL_DRAW_FRAMEBUFFER, otherBuffer);
+		GL32.glBindFramebuffer(GL32.GL_READ_FRAMEBUFFER, bufferID);
+		GL32.glBlitFramebuffer(0, 0, width, height, dx, dy, dx+width, dy+height, GL11.GL_COLOR_BUFFER_BIT, GL11.GL_NEAREST);
 		GL32.glBindFramebuffer(GL32.GL_FRAMEBUFFER, 0);
 	}
 
